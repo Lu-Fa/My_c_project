@@ -1,0 +1,19 @@
+#include<stdio.h>
+#include<string.h>
+int covert(char number[],int radix);
+int main()
+{
+	int N1, N2, tag, radix,another_radix;
+	
+
+	return 0;
+}
+int covert(char number[],int radix)
+{
+	int i, j;
+	char c;
+	for (i = 0; (c = number[i]) != '\0'; i++)
+	{
+		
+	}
+}

@@ -1,0 +1,27 @@
+#include<stdio.h>
+//在本地变量初始化时加上static成为静态本地变量
+//静态本地变量的初始化只在第一次进入函数时做，以后进入函数时会保持上次
+//离开时的值
+//其实就是特殊的全局变量，位于相同的内存区域,具有全局生存区
+//static意为局部作用域，即只在本地可访问
+//具有全局变量的生存期，本地变量的作用域
+int gall = 12;
+int f(void);
+int main()
+{
+	f();
+	f();
+	return 0;
+}
+int f(void)
+{
+	static int all = 1;
+	int i = 2;
+	printf("in %s all=%d\n", __func__, all);
+	all += 2;
+	printf("agn %s all=%d\n", __func__, all);
+	printf("全局变量 gall's address:%p\n", &gall);
+	printf("静态本地变量 all's address:%p\n", &all);
+	printf("普通本地变量 i's address:%p\n", &i);
+	return all;
+}

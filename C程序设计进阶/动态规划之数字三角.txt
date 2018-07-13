@@ -1,0 +1,153 @@
+/*给出一个数字三角形，求其中一个数字到底层路径数字之和的最大值*/
+//Version 1
+#include<stdio.h>
+int MaxSum(int,int,int);//函数原型
+int D[100][100]= { {1}, { 2,4 }, { 6,8,9 }, { 4,7,5,2 } };//数字三角
+int main()
+{
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j <= i; j++)
+			scanf_s("%d", &D[i][j]);//输入三角数字
+	int max=MaxSum(0, 0, 4);//求第0行第0个数字到....
+	printf("%d", max);
+	return 0;
+}
+int MaxSum(int r,int j,int N)
+{
+	if (r == N)return D[r][j];//如果数字在底层则输出这个数字
+	
+	else	return ((MaxSum(r + 1, j,N) > MaxSum(r + 1, j + 1,N) ? MaxSum(r + 1, j,N) : MaxSum(r + 1, j + 1,N))+D[r][j]);
+}
+/*
+分析：复杂度为2^n,效率不高
+*/
+
+/*给出一个数字三角形，求其中一个数字到底层路径数字之和的最大值*/
+//Version 2
+#include<stdio.h>
+int MaxSum(int,int,int);//函数原型
+int maxSum[100][100];
+int D[100][100]= { {1}, { 2,4 }, { 6,8,9 }, { 4,7,5,2 } };//数字三角
+int main()
+{
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j <= i; j++)
+		{
+			scanf_s("%d", &D[i][j]);//输入三角数字
+			maxSum[i][j] = -1;
+		}
+	int max=MaxSum(0, 0, 4);//求第0行第0个数字到....
+	printf("%d", max);
+	return 0;
+}
+int MaxSum(int r, int j, int N)
+{
+	if (maxSum[r][j] != -1)return maxSum[r][j];
+	else
+	{
+		if (r == N)maxSum[r][j]= D[r][j];//如果数字在底层则输出这个数字
+
+		else	maxSum[r][j]= ((MaxSum(r + 1, j, N) > MaxSum(r + 1, j + 1, N) ? MaxSum(r + 1, j, N) : MaxSum(r + 1, j + 1, N)) + D[r][j]);
+	}
+	return maxSum[r][j];
+}
+/*
+分析：复杂度为2^n,效率不高
+对maxSum的值进行保存
+*/
+
+
+//Version 3 递归转成递推
+#include<stdio.h>
+int maxSum[100][100];
+int D[100][100] = { {7}, { 3,8 }, { 8,1,0 }, { 2,7,4,4 },{4,5,2,6,5} };//数字三角
+int main()
+{
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j <= i; j++)
+			{
+				scanf_s("%d", &D[i][j]);//输入三角数字
+			}
+	
+	for (int i = 0; i < 5; i++)
+	{
+		maxSum[4][i] = D[4][i];
+		printf("%-5d", maxSum[4][i]);
+	}
+	for (int i = 3; i >= 0; i--)//从底层递推至顶层
+	{
+		printf("\n");
+		for (int j = 0; j <= i; j++)
+		{
+			maxSum[i][j] = ((maxSum[i + 1][j]>maxSum[i + 1][j + 1] ? maxSum[i + 1][j] : maxSum[i + 1][j + 1]) + D[i][j]);
+			printf("%-5d",maxSum[i][j]);
+		}
+		
+	}
+	return 0;
+}
+		
+//Version 4 空间优化 不必把每个maxSum进行存储
+//用一维数组对maxSum存储，每计算出一个maxSum即对上一对应位置进行替换
+#include<stdio.h>
+int maxSum[100];
+int D[100][100] = { {7}, { 3,8 }, { 8,1,0 }, { 2,7,4,4 },{4,5,2,6,5} };//数字三角
+int main()
+{
+	
+	for (int i = 0; i < 4; i++)
+			for (int j = 0; j <= i; j++)
+			{
+				scanf_s("%d", &D[i][j]);//输入三角数字
+			}
+	
+	for (int i = 0; i < 5; i++)
+	{
+		maxSum[i] = D[4][i];
+		printf("%-5d", maxSum[i]);
+	}
+	for (int i = 3; i >= 0; i--)//从底层递推至顶层
+	{
+		printf("\n");
+		for (int j = 0; j <= i; j++)
+		{
+			maxSum[j] = ((maxSum[j]>maxSum[j + 1] ? maxSum[j] : maxSum[j + 1]) + D[i][j]);
+			printf("%-5d",maxSum[j]);
+		}
+		
+	}
+	return 0;
+}
+//进一步考虑，maxSum数组也可以不要，进而用D的最底层来代替maxSum
+//Version 5 
+#include<stdio.h>
+int *maxSum;
+int D[100][100] = { {7}, { 3,8 }, { 8,1,0 }, { 2,7,4,4 },{4,5,2,6,5} };//数字三角
+int main()
+{
+	/*
+	for (int i = 0; i < 4; i++)
+			for (int j = 0; j <= i; j++)
+			{
+				scanf_s("%d", &D[i][j]);//输入三角数字
+			}
+	*/
+	maxSum = D[4];
+	for (int i = 0; i < 5; i++)
+	{
+		printf("%-5d", maxSum[i]);
+	}
+	for (int i = 3; i >= 0; i--)//从底层递推至顶层
+	{
+		printf("\n");
+		for (int j = 0; j <= i; j++)
+		{
+			maxSum[j] = ((maxSum[j]>maxSum[j + 1] ? maxSum[j] : maxSum[j + 1]) + D[i][j]);
+			printf("%-5d",maxSum[j]);
+		}
+		
+	}
+	return 0;
+}
+		
+	

@@ -1,0 +1,16 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+int main()
+{
+	system("color 4f");
+	system("title shutdown");
+	char cmd[30] = "shutdown -s -t ";
+	printf("你想在多少秒时关机：");
+	char sec[10];
+	scanf_s("%s", sec,10);
+	system(cmd);
+	
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,37 @@
+/*---first version----*/
+#include<stdio.h>
+#include<math.h>
+int main()
+{
+	int a;
+	int b;
+	scanf_s("%d%d", &a, &b);
+	int c = a + b;
+	int count=0,digit,pos=1;
+	if (c< 0)
+	{
+		printf("-");
+		c = -c;
+	}
+	  int x = c;
+	while (x>9)
+	{
+		x /= 10;
+		pos++;
+	}
+	int post = pow(10, pos - 1);
+	while (post>0)
+	{
+		
+		digit = c/post;
+		c =(c-post*digit);
+		count++;
+		post /= 10;
+		printf("%d", digit);
+		if((pos-count)%3==0 && post>9)
+		{
+			printf(",");
+		}
+	}
+	return 0;
+}

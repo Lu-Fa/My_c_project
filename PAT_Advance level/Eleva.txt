@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<math.h>
+//电梯上楼需要6S/层，下楼4秒/层，停留层//停留需要5秒，给出停留层，求总时间（当//前电梯在0层）
+int main()
+{
+	int N;
+	int e[20];
+	scanf_s("%d", &N);
+	int i, j,time;
+	for (i = 0; i < N; i++)
+		scanf_s("%d", &e[i]);
+	time = e[0] * 6 + 5;
+	for ( i = 1; i < N; i++)
+	{
+		if (e[i] > e[i - 1])
+			time += (e[i]-e[i-1]) * 6 + 5;
+		else
+			time += (e[i-1]-e[i]) * 4 + 5;
+	}
+	printf("time=%d sec\n", time);
+	return 0;
+}

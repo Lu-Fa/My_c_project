@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<Windows.h>
+void slowPrint(char s[],int sleeptime);
+int main()
+{
+	slowPrint("hellow,world!",200);
+	system("date /T");
+	system("time /T");
+	printf("\n");
+	Sleep(2000);
+	return 0;
+}
+void slowPrint(char s[],int sleeptime)
+{
+	int i = 0;
+	while (s[i]!='\0')
+	{
+		printf("%c", s[i]);
+		Sleep(sleeptime);
+		i++;
+	}
+}

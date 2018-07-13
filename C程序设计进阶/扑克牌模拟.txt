@@ -1,0 +1,70 @@
+/*扑克牌的发牌和洗牌的模拟*/
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+typedef struct
+{
+	char suit[10];
+	char face[10];
+}CARD;
+char *psuit[] = { "spades","hearts","clubs","diamonds" };
+char *pface[] = { "A", "2","3", "4",  "5", "6","7", "8",  "9", "10","J", "Q",  "K" };
+
+void FillCard(CARD card[]);
+void DealCard(CARD card[],int result[]);
+void ShuffCard(int result[]);
+void initialize(int result[]);
+int main()
+{
+	CARD card[52];
+	int result[52];
+	initialize(result);
+	FillCard(card);
+	DealCard(card, result);
+	printf("洗牌后 :\n");
+	ShuffCard(result);
+	DealCard(card,result);
+	return 0;
+}
+
+void FillCard(CARD card[])//按照顺序填充牌面和花色
+{
+	//从A-K,每种牌面有四种花色排列
+	for (int i = 0; i < 52; i++)
+	{
+		strcpy_s(card[i].suit, 10, psuit[i % 4]);
+		strcpy_s(card[i].face, 10, pface[i / 4]);
+	}
+}
+void initialize(int result[])//初始化
+{
+	for (int i = 0; i < 52; i++)
+	{
+		result[i] = i;
+	}
+}
+void DealCard(CARD card[],int result[])//按照result数组的顺序发牌
+{
+	int count = 1;
+	for (int i = 0; i < 52; i++, count++)
+	{
+		printf("%s%2s  ", card[result[i]].suit, card[result[i]].face);
+		if (count % 4 == 0)printf("\n");
+	}
+}
+void ShuffCard(int result[])//洗牌，通过打乱result数组的顺序来进行洗牌
+{
+	int i, j, temp;
+	for (i = 0; i < 52; i++)
+	{
+		//进行数的交换以此打乱数组的顺序
+		j = rand() % 52;
+		temp=result[i];
+		result[i] = result[j];
+		result[j] = temp;
+	}
+}
+
+
+	
+

@@ -1,0 +1,108 @@
+
+#include<stdio.h>
+/*
+50 1300 12 8
+6.00 1250
+7.00 600
+7.00 150
+7.10 0
+7.20 200
+7.50 400
+7.30 1000
+6.85 300
+*/
+const int inf =999999;
+struct station
+{
+	double price;
+	double dis;
+}station;
+void sort(struct station s[]);
+int main()
+{
+	double Cmax, D, Davg;
+	int N;
+	scanf_s("%lf%lf%lf%d", &Cmax, &D, &Davg, &N);
+	struct station sta[100] = { 0.0,0.0 };
+	sta[N].dis = D;
+	sta[N].price = 0.0;
+	for (int i = 0; i <N; i++)
+	{
+		scanf_s("%lf %lf", &sta[i].price, &sta[i].dis);
+	}
+	
+	sort(sta, N);
+	double nowdis = 0.0, maxdis;
+	double nowprice = 0.0, totalprice = 0.0, left_dis = 0.0;
+	if (sta[0].dis != 0)
+	{
+		printf("The maxium travel distance =%.2f", nowdis);
+		return 0;
+	}
+	else
+	{
+		nowprice = sta[0].price;
+	}
+	for (int i = 0; i <= N; i++)
+	{
+		printf("%.2f %.2f\n", sta[i].dis, sta[i].price);
+	}
+	while (nowdis < D)
+	{
+		int flag = 0;
+		maxdis = nowdis + Cmax*Davg;
+		double minPriceDis = 0.0,minPrice=inf;
+		for (int i = 0; i <= N&&sta[i].dis <= maxdis; i++)
+		{
+			if (sta[i].dis <= nowdis)continue;
+			if (sta[i].price < nowprice)
+			{
+				totalprice += (sta[i].dis - nowdis - left_dis)*nowprice / Davg;
+				left_dis = 0.0;
+				nowprice = sta[i].price;
+				nowdis = sta[i].dis;
+				flag = 1;
+				break;
+			}
+			if (sta[i].price < minPrice)
+			{
+				minPrice = sta[i].price;
+				minPriceDis = sta[i].dis;
+			}
+		}
+		if (flag == 0 && minPrice != inf)
+		{
+			totalprice += (Cmax - left_dis)*nowprice / Davg;
+			left_dis = Cmax*Davg-(minPriceDis-nowdis);
+			nowprice =minPrice;
+			nowdis = minPriceDis;
+		}
+		if (flag == 0 && minPrice == inf)
+		{
+			nowdis += Cmax*Davg;
+			printf("The maxium travel distance =%.2f", nowdis);
+			return 0;
+		}
+	}
+	printf("%.2f", totalprice);
+	return 0;
+}
+void sort(struct station sta[], int N)
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = i; j < N; j++)
+		{
+			if (sta[j].dis < sta[i].dis)
+			{
+				int temp1 = sta[i].dis;
+				sta[i].dis = sta[j].dis;
+				sta[j].dis = temp1;
+				int temp2 = sta[i].price;
+				sta[i].price = sta[j].price;
+				sta[j].price = temp2;
+			}
+		}
+	}
+}
+

@@ -1,0 +1,29 @@
+/*
+最长上升子序列:
+输入：第一行输入序列长度N，第二行输入序列中的N个数
+求最长子序列的长度
+*/
+#include<stdio.h>
+const int MAXN = 1010;
+int arr[MAXN]= { 1,7,3,5,9,4,8 }, MaxLen[MAXN];
+int main()
+{
+	int i, j;
+	int N = 7;
+	for (i = 0; i <N; i++)
+	{
+		MaxLen[i] = 1;
+	}
+	for (i = 1; i < N; i++)//每次以i为终点的最大子列
+	{
+		for (j = 0; j < i; j++)
+		{
+			if (arr[i] > arr[j])
+			{
+				MaxLen[i] =(MaxLen[i]>(MaxLen[j]+1)?MaxLen[i]:(MaxLen[j]+1));
+			}
+		}
+	}
+	printf("%d", MaxLen[5]);
+	return 0;
+}

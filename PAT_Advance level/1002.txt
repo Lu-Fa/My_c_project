@@ -1,0 +1,36 @@
+//and two polynomial
+/*sample input:
+                2 1 2.4 0 3.2
+                2 2 1.5 1 0.5
+ooutput:3 2 1.5 1 2.9 0 3.2
+#include<stdio.h>
+int main()
+{
+	float x[1001] = {0},an;//initialize coefficient
+	int m,n,t,cnt=0;
+	int i;
+	scanf_s("%d", &m);//input first polynomial nozero terms
+	for (i = 0; i < m; i++)//input coefficient if x^t
+	{
+		scanf_s("%d%f", &t,&an);
+		x[t] += an;
+	}
+	scanf_s("%d", &n);
+	for (i = 0; i < n; i++)
+	{
+		scanf_s("%d%f", &t, &an);
+		x[t] += an;
+	}
+	for (i = 1000; i >=0; i--)
+	{
+		if(x[i]!=0.0)
+		   cnt++;
+	}
+	printf("%d ", cnt);//count result nozero terms
+	for (i = 1000; i >=0; i--)
+	{
+		if (x[i] != 0.0)
+			printf("%d %.1f ",i, x[i]);
+	}
+	return 0;
+}

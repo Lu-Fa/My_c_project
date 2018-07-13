@@ -1,0 +1,34 @@
+#include<stdio.h>
+int main()
+{
+	int num;
+	/*
+	fopen:
+	r:打开只读 w:打开只写 w+打开读写，如果不存在则新建，如果存在则清空
+	r+打开读写，从文件头开始 a:打开追加，如果不存在则新建，如果存在则在文件尾开始
+	..x:只新建，如果文件已存在则不能打开
+	*/
+	FILE *fp = fopen("data.txt", "a");//以可读的方式打开文件
+	if(fp)
+	{
+		char s[80] = { " " };
+		//fprintf(fp,"%s", "hi");//写入
+		//fgetc(fp);//读取数据
+		puts(s);
+		fclose(fp);//关闭文件
+	}
+	else
+	{
+		printf("无法打开文件！");
+	}
+
+	//FILE *fp1 = fopen("data1.txt", "w+");//读写的方式打开文件
+	//if (fp1)
+	//{
+	//	char s[80];
+	//	fscanf_s(fp1,"%s", s);
+	//	printf("%s",s);//打印
+	//	fclose(fp);//关闭文件
+	//}
+	return 0;
+}

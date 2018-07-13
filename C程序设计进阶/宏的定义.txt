@@ -1,0 +1,29 @@
+/*
+    #开头表示编译预处理指令
+	#difine用来定义一个宏(宏：定义一个符号）
+	不是c语言，因此句末不需要加分号
+	运行过程：.c->.i->.s->.o->.out
+	.c为源代码文件
+	.i为预处理（将文本替换等）后的临时文件
+	.s为汇编代码文件
+	.o为目标代码文件
+	.out最终的可执行文件
+*/
+#include<stdio.h>
+//const double PI=3.14159;
+#define PI 3.14159
+#define FORMAT "%.5f\n"
+#define PI2 2*PI//hi
+#define PRT printf("hellow,");\
+            printf("world!")
+int main()
+{
+	printf(FORMAT, PI);
+	printf(FORMAT, PI2);
+	PRT;
+	printf("\n");
+	//预定义的宏
+	printf("data:%s\nline:%d\n", __DATE__, __LINE__);
+	printf("time:%s\nfile:%s\n", __TIME__, __FILE__);
+	return 0;
+}

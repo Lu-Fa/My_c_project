@@ -1,0 +1,54 @@
+#include<stdio.h>
+void f(int a)
+{
+	printf("int f(),%d", a);
+}
+void g(int a)
+{
+	printf("int g(),%d", a);
+}
+void h(int a)
+{
+	printf("int h(),%d", a);
+	
+}
+void k(int a)
+{
+	printf("int k(),%d", a);
+
+}
+int plus(int a, int b)
+{
+	return a + b;
+}
+int minus(int a, int b)
+{
+	return a - b;
+}
+void cal(int(*pf)(int a, int b))
+{
+	printf("\n%d",(*pf)(2,5));
+}
+int main()
+{
+	int i;
+	scanf_s("%d", &i);
+	void(*pf[])(int) = { f,g,h ,k};//这种结构可以根据用户输入，实现不同的操作
+	if (i >= 0 && i < sizeof(pf) / sizeof(pf[0]))
+	{
+		(*pf[i])(0);
+	}
+	/*
+	switch (i)
+	{
+	case 1:f(0); break;
+	case 2:g(0); break;
+	case 3:h(0); break;
+	default:
+		break;
+	}*/
+	cal(plus);//参数为函数名，即函数的地址
+	cal(minus);
+
+	return 0;
+}

@@ -1,0 +1,14 @@
+#include<stdio.h>
+int main()
+{
+	printf("%09d\n", 123);//-表示左对齐，加0进行填充
+	printf("%-9d12\n", 123);//表示右对齐
+	printf("%9.2f\n", 123.0);//9表示总共占9个字符位置，.2表示小数点后占两个字符
+	printf("%hhd\n", 12345);//hhd输出字符
+	printf("%*d\n",9, 12345);//*可以输出字符占位数
+	int num;
+	printf("%dxy%n\n", 12345,&num);//%n读取输出字符个数
+	printf("%d\n", num);//
+	return 0;
+
+}

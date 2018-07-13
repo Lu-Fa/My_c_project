@@ -1,0 +1,32 @@
+#include<stdio.h>
+int* f(void);
+void g(void);
+int main()
+{
+	//在离开函数后本地变量的地址会被复用，因此返回本地变量的地址是危险的
+	//应返回传入的指针
+	//而返回全局量和静态量的地址不会复用，因为它们的生存期为全局的
+	int *p = f();
+	printf("*p:%d\n", *p);
+	g();
+	printf("*p:%d\n", *p);
+	return 0;
+}
+int* f(void)
+{
+	int i = 12;
+	printf("i's address:%p\n", &i);
+	return &i ;
+}
+void g(void)
+{
+	int k = 24;
+	printf("k's address:%p\n", &k);
+	printf("k=%d\n", k);
+}
+/*
+               Tips:
+     1.不要使用全局变量在函数间传递参数和结果
+	 2.尽量避免使用全局变量
+	 3.使用全局变量和静态本地变量是线程不安全的
+*/

@@ -1,0 +1,418 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<Windows.h>
+#include<mmsystem.h>
+//#pragma comment (lib)
+//蛇的状态：上、下、左、右
+#define U 1
+#define D 2
+#define L 3
+#define R 4
+typedef struct SNAKE
+{
+	int x;
+	int y;
+	struct SNAKE *next;
+}snake;
+void Pos(int x, int y);
+//全局变量
+int score = 0, add = 10;//总分和每次吃食物得分
+int status, sleeptime = 200;//移动方向，快慢
+int EndGameStatus = 0;//游戏结束的状况：1、撞到墙 2、咬到自己 3、主动退出 
+snake *head,*food;
+snake *q;
+char s;
+
+void GameStart();//游戏初始化
+void  WelcomeToGame();//开始界面
+void CreatMap();//创建地图
+void CreatSnake();//创建蛇
+void CreatFood();//创建随机食物
+int BitSelf();//判断是否咬到自己
+void CantCrossWall();//不能穿墙
+void SnakeMove();//控制蛇的移动
+void Pause();//停止游戏
+void EndGame();//游戏结束
+void GameCircle();//游戏循环
+int main()
+{
+	system("title 来玩嘛");
+	system("color F0");
+	Pos(25, 7);
+	printf("想玩一个游戏吗？");
+	Pos(25, 10);
+	printf("输入y or n:");
+	scanf_s("%c", &s);
+		GameStart();
+		GameCircle();
+		EndGame();
+	return 0;
+
+}
+void Pos(int x, int y)
+{
+	COORD pos;
+	HANDLE houtput;
+	pos.X = x;
+	pos.Y = y;
+	houtput = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(houtput, pos);
+}
+void  WelcomeToGame()
+{
+	Pos(40, 12);
+	system("title snake ");//窗口标题
+	system("color 34");//窗口背景色及字体颜色
+					   //system("font size 24");
+	printf("欢迎来到贪吃蛇！");
+	Pos(40, 25);
+	printf("@copyright 2018");
+	system("pause");
+	system("cls");
+	Pos(25, 12);
+	printf("通过↑ ↓ ← → 控制移动方向 1 为加速 2 为减速");
+	Pos(25, 13);
+	printf("加速可以获得更高的分数");
+	system("pause");
+	system("cls");
+
+}
+void CreatMap()
+{
+	for (int i = 0; i < 58; i += 2)//上下边框
+	{
+		Pos(i, 0);
+		printf("■");
+
+		Pos(i, 26);
+		printf("■");
+
+	}
+	for (int i = 1; i < 26; i++)//左右边框
+	{
+		Pos(0, i);
+		printf("■");
+		Pos(56, i);
+		printf("■");
+	}
+	CreatSnake();
+	//Pos(60, 3);
+	//printf("Score:%d", score);
+	//system("pause");
+}
+void GameStart()
+{
+	system("mode con cols=100 lines=30");//窗口高度和宽度
+	WelcomeToGame();
+	CreatMap();
+	CreatFood();
+}
+void CreatSnake()
+{
+	snake *tail;//从蛇尾开始，头插法
+	tail = (snake*)malloc(sizeof(snake));
+	tail->x = 24;
+	tail->y = 5;
+	tail->next = NULL;
+	for (int i = 0; i <= 4; i++)
+	{
+
+		head = (snake*)malloc(sizeof(snake));
+		head->next = tail;
+		head->x = 24 + 2 * i;
+		head->y = 5;
+		tail = head;
+	}
+	while (tail != NULL)
+	{
+		Pos(tail->x, tail->y);
+		printf("■");
+		tail = tail->next;
+	}
+}
+void CreatFood()
+{
+	snake *food_1;
+	srand((unsigned)time(NULL));
+	food_1 = (snake*)malloc(sizeof(snake));
+	while ((food_1->x%2)!=0)
+	{
+		food_1->x = rand() % 52 + 2;
+	}
+	food_1->y = rand() % 24 + 1;
+	q = head;
+	while (q->next==NULL)
+	{
+		if (q->x == food_1->x &&q->y == food_1->y)//如果蛇身与生成的食物重合，则重新生成食物
+		{
+			free(food_1);
+			CreatFood();
+		}
+		q = q->next;
+	}
+	Pos(food_1->x, food_1->y);
+	food = food_1;
+	printf("■");
+}
+int BitSelf()
+{
+	snake *self;
+	self = head->next;
+	while (self != NULL)
+	{
+		if (self->x == head->x &&self->y == head->y)
+		{
+			return 1;
+		}
+		self = self->next;
+	}
+	return 0;
+}
+void SnakeMove()
+{
+	
+	snake *nexthead;
+	CantCrossWall();
+	nexthead = (snake*)malloc(sizeof(snake));
+	if (status == U)
+	{
+		nexthead->x = head->x;
+		nexthead->y = head->y - 1;
+		if (nexthead->x == food->x&&nexthead->y == food->y)//如果下一位置有食物
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			score += add;
+			CreatFood();
+		}
+		else
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q->next->next != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			Pos(q->next->x, q->next->y);
+			printf(" ");
+			free(q->next);
+			q->next = NULL;
+		}
+
+	}
+	if (status == D)
+	{
+		nexthead->x = head->x;
+		nexthead->y = head->y + 1;
+		if (nexthead->x == food->x&&nexthead->y == food->y)//如果下一位置有食物
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			score += add;
+			CreatFood();
+		}
+		else
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q->next->next != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			Pos(q->next->x, q->next->y);
+			printf(" ");
+			free(q->next);
+			q->next = NULL;
+		}
+	}
+	if (status == L)
+	{
+		nexthead->x = head->x-2;
+		nexthead->y = head->y;
+		if (nexthead->x == food->x&&nexthead->y == food->y)//如果下一位置有食物
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			score += add;
+			CreatFood();
+		}
+		else
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q->next->next != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			Pos(q->next->x, q->next->y);
+			printf(" ");
+			free(q->next);
+			q->next = NULL;
+		}
+	}
+	if (status == R)
+	{
+		nexthead->x = head->x+2;
+		nexthead->y = head->y;
+		if (nexthead->x == food->x&&nexthead->y == food->y)//如果下一位置有食物
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			score += add;
+			CreatFood();
+		}
+		else
+		{
+			nexthead->next = head;
+			head = nexthead;
+			q = head;
+			while (q->next->next != NULL)
+			{
+				Pos(q->x, q->y);
+				printf("■");
+				q = q->next;
+			}
+			Pos(q->next->x, q->next->y);
+			printf(" ");
+			free(q->next);
+			q->next = NULL;
+		}
+	}
+	if (BitSelf()==1)
+	{
+		EndGameStatus = 2;
+		EndGame();
+	}
+}
+void CantCrossWall()
+{
+	if (head->x == 0 || head->x == 56 || head->y == 0 || head->y== 26)
+	{
+		EndGameStatus == 1;
+		EndGame();
+		//printf("x=%d,y=%d",head->x,head->y);
+	}
+	
+}
+void GameCircle()
+{
+	
+	status = R;
+	while (1)
+	{
+		Pos(64, 3);
+		printf("Score:%d", score);
+		Pos(64, 7);
+		printf("每个食物得分:%d", add);
+		Pos(63, 9);
+		printf("按空格键暂停游戏，按ESC键退出游戏");
+		Pos(69, 12);
+		printf("按TAB键进行加速");
+		Pos(66, 20);
+		printf("@copyright 2018.6.18");
+		if (GetAsyncKeyState(VK_UP) && status != D)
+		{
+			status = U;
+		}
+		if (GetAsyncKeyState(VK_DOWN) && status != U)
+		{
+			status = D;
+		}
+		if (GetAsyncKeyState(VK_LEFT) && status != R)
+		{
+			status = L;
+		}
+		if (GetAsyncKeyState(VK_RIGHT) && status != L)
+		{
+			status = R;
+		}
+		if (GetAsyncKeyState(VK_ESCAPE))
+		{
+			EndGameStatus = 3;
+			break;
+		}
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			Pause();
+		}
+		if (GetAsyncKeyState(VK_TAB))
+		{
+			if (sleeptime > 20)
+			{
+				sleeptime -= 20;
+				add += 10;
+			}
+		}
+	
+		Sleep(sleeptime);
+		SnakeMove();
+	}
+	
+}
+void Pause()
+{
+	while (1)
+	{
+		Sleep(300);
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+				break; 
+		}
+	}
+	
+}
+void EndGame()
+{
+	system("cls");
+	Pos(25, 12);
+	if (EndGameStatus == 3)
+	{
+		printf("已退出游戏！ ");
+	}
+	else if (EndGameStatus == 1||2)
+	{
+		printf("sorry,GameOver！");
+	}
+	Pos(25, 15);
+	printf("总得分：%d ", score);
+	system("pause");
+	exit(0);
+}

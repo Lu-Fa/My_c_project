@@ -1,0 +1,100 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include"node.h"
+/*
+#ifndef _NODE_H_
+#define _NODE_H_
+typedef struct _node 
+{
+	int value;
+	struct _node *next;
+}Node;
+#endif 
+*/
+typedef struct _list 
+{
+	Node *head;
+}List;
+void add(List *plist, int number);
+void print(List *plist);
+int FindAndDelete(List *plist, int number);
+void delete(List *plist, int number);
+int main()
+{
+	List list;
+	list.head = NULL;
+	int number;
+	do {
+		scanf_s("%d", &number);
+		if(number!=-1)
+		  add(&list, number);
+	} while (number != -1);
+//2 8 2 6 38 -1
+	print(&list);
+	printf("\n");
+	FindAndDelete(&list, 6);
+	printf("\n");
+	print(&list);
+
+	
+	return 0;
+}
+void add(List *plist, int number)
+{
+           
+	        //add to link-list
+			Node *p = (Node*)malloc(sizeof(Node));
+			p->value = number;
+			p->next = NULL;
+			//find the last node
+			Node *last = plist->head;
+			if (last)
+			{
+				while (last->next)
+				{
+					last = last->next;
+				}
+				last->next = p;
+			}
+			else
+			{
+				plist->head = p;
+			}
+		
+}
+void print(List *plist)
+{
+	Node *p;
+	for (p = plist->head; p; p = p->next)
+	{
+		printf("%d ", p->value);
+	}
+}
+int FindAndDelete(List *plist,int number)
+{
+	Node *p;
+	int isFound = 0;
+	Node *q;
+	for (q=NULL,p = plist->head; p; q=p,p = p->next)
+	{
+		if (number == p->value)
+		{
+			if (q) {
+				q->next = p->next;
+			}
+			else
+			{
+				plist->head = p->next;
+			}
+			free(p);
+			break;
+		}
+	}
+	/*for (p = plist->head; p; p->next)
+	{
+		q = p->next;
+		free(p);
+		
+	}*/
+	return 0;
+}

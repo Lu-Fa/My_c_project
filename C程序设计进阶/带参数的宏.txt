@@ -1,0 +1,15 @@
+#include<stdio.h>
+/*
+    带参数的宏的原则:
+	整个值要括号，出现参数的每个地方要括号
+*/
+#define cube1(x) ((x)*(x)*(x))//宏 名字 值
+#define cube2(x) (x*2)
+#define MIN(a,b) ((a)>(b)?(b):(a))
+int main()
+{
+	printf("cube1(3+2)=%d",cube1(3+2));
+	printf("\ncube2(3+2)=%d\n",cube2(3+2));
+	printf("MIN(3,2)=%d", MIN(3,2));
+	return 0;
+}

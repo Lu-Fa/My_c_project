@@ -1,0 +1,20 @@
+#include<stdio.h>
+int gall;
+//全局变量未初始化时会默认为0，全局指针会默认为NULL
+int f(void);
+int main()
+{
+	printf("in %s gall=%d\n",__func__, gall);
+	f();
+	printf("agn %s gall=%d\n", __func__, gall);
+	return 0;
+}
+int f(void)
+{
+	int gall=1;//如果函数内有变量与全局变量同名，则全局变量会被隐藏
+             //变量会被更小区域的同名变量隐藏
+             printf("in %s gall=%d\n", __func__, gall);
+	gall += 2;
+	printf("agn %s gall=%d\n", __func__, gall);
+	return gall;
+}

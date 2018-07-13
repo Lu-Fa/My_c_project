@@ -1,0 +1,30 @@
+#include<stdio.h>
+int isPrime(int a);
+int main()
+{
+	int i = 2;
+	int *p=&i;
+	*p = 3;
+	printf("%p\n", &i);
+	printf("%p\n", p);
+	int (*pf)(int a) = isPrime;//函数指针
+	isPrime(3);
+	(*pf)(8);//调用函数
+	printf("%p\n", isPrime);
+	printf("%p\n", pf);
+	printf("%p", main);
+	return 0;
+}
+int isPrime(int a)
+{
+	for (int i = 2; i*i < a; i++)
+	{
+		if (a % 2 == 0)
+		{
+			printf("not a prime number\n");
+			return 0;
+		}
+	}
+	printf("is a prime number\n");
+	return 1;
+}

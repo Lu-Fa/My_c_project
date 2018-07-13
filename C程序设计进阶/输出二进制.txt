@@ -1,0 +1,11 @@
+#include<stdio.h>
+int main()
+{
+	int number =0x9A;
+	unsigned mask = 1u << 31;
+	for (; mask; mask >>= 1)//maskµÄ1´Ó×óÍùÓÒÒÆÎ»
+	{
+		printf("%d", number&mask ? 1 : 0);
+	}
+	return 0;
+}

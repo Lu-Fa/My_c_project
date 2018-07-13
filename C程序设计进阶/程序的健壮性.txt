@@ -1,0 +1,25 @@
+/*程序的健壮性：对用户的非法输入或其他的突发情况能够正确处理*/
+#include<stdio.h>
+#include<Windows.h>
+int fact(int n);
+int main()
+{
+	int m;
+	printf("Please Enter a number:");
+	scanf_s("%d", &m);
+	while (m < 0)
+	{
+		printf("\ninvalide,Enter again:");
+		scanf_s("%d", &m);	
+	}
+	int r = fact(m);
+	printf("%d!=%d\n", m, r);
+	return 0;
+}
+int fact(int n)
+{
+	int result=1;
+	for (int i = 1; i <= n; i++)
+		result *= i;
+	return result;
+}
